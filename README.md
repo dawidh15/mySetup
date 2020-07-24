@@ -29,6 +29,26 @@ You need to **restart** the terminal, to be able to use pandoc from PowerShell.
 
 For now, uninstall pandoc manually. Delete the folder `<SystemDrive>:\tools\pandoc\`, clean the `Path`, and delete the Windows Registry where the pandoc key appears (*Careful, do not delete any key from the registry unless you are absolutely sure it is safe to do it*)
 
+## Install-Sqlite PowerShell script
+
+Use this script to download the pre-compiled executables `sqlite3.exe`, `sqldiff.exe` and `sqlite3_analyzer.exe`. The zip file will be downloaded to `$env:Temp\sqliteTMP`. The executables will be installed on `<SystemDrive>:\tools\sqlite\<version>`. And this path will be added to the *Machine* `$env:Path`.
+
+### Usage
+
+Copy the *url* of the binaries, and use it as an argument:
+
+```powershell
+> $url="https://www.sqlite.org/2020/sqlite-tools-win32-x86-3320300.zip"
+> cd <mySetup_path>\Install-Tools
+> .\Install-SQLite.ps1 -precompBins $url
+```
+
+If installation was correct, it will prompt you to the *sqlite CLI*. To exit, execute `.quit`
+
+### Uninstall
+
+For now, uninstall sqlite manually. Delete the folder `<SystemDrive>:\tools\sqlite\`, clean the `Path`, and delete the Windows Registry where the pandoc key appears (*Careful, do not delete any key from the registry unless you are absolutely sure it is safe to do it*)
+
 
 # Utils
 

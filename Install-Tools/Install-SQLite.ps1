@@ -1,56 +1,59 @@
    Param(
     [Parameter(Mandatory=$true)]
-    [String]$installVersion
+    [String]$precompBins
     )
 
 Function Main
 {
 # Construct Path for download
-Set-Variable -Name "PandocFolderName" -Value "PandocTmp\"
-Set-Variable -Name "PandocPath" -Value (Join-Path $env:TMP $PandocFolderName)
-Write-Host "Path Name Created: " $PandocPath
+Set-Variable -Name "sqliteFolderName" -Value "sqliteTmp\"
+Set-Variable -Name "sqlitePath" -Value (Join-Path $env:TMP $sqliteFolderName)
+Write-Host "Path Name Created: " $sqlitePath
 
 # Check if Temp Folder for Download exists
 # Yes: Delete folder and everything inside
-If (Test-Path $PandocPath)
+If (Test-Path $sqlitePath)
   {
-    Remove-Item $PandocPath -Recurse
+    Remove-Item $sqlitePath -Recurse
     Write-Host "Old Folder found and then deleted. New folder created."
   }
 
 # Create Folder
-New-Item -Path $PandocPath -Type Directory
+New-Item -Path $sqlitePath -Type Directory
 
-# Web request for Pandoc.zip
+# Web request for sqlite.zip
     # Construct names, paths
-Set-Variable -Name "PandocZip" -Value ("/pandoc-" + $installVersion + "-windows-x86_64.zip")
-Set-Variable -Name "SourceZip" -Value ("https://github.com/jgm/pandoc/releases/download/" + $installVersion + $PandocZip)
-Write-Host "Powershell generated Url: " + $SourceZip
-Set-Variable -Name "LocalTempZip" -Value ($PandocPath + $PandocZip)
+Set-Variable -Name "sqliteZip" -Value (Split-Path $precompBins -Leaf)
+Set-Variable -Name "SourceZip" -Value $precompBins
+Write-Host "Powershell generated Url: " $SourceZip
+Set-Variable -Name "LocalTempZip" -Value ($sqlitePath + $sqliteZip)
 
 Invoke-WebRequest $SourceZip -OutFile $LocalTempZip
 
 If(Test-Path $LocalTempZip)
 {
-    Write-Host "File downloaded in: " + $PandocPath
+    Write-Host "File downloaded in: " + $LocalTempZip
 } else {
        Write-Host "File was NOT downloaded. Check True Url, against powershell generated Url."
        Exit
 }
 
 # Unzip
-$toolsPandocPath = Get-ToolsPandoc
-CreateIf-Folder $toolsPandocPath
-Expand-Archive -LiteralPath $LocalTempZip -DestinationPath $toolsPandocPath
+$toolsPath = Get-ToolsSqlite
+CreateIf-Folder $toolsPath
+Expand-Archive -LiteralPath $LocalTempZip -DestinationPath $toolsPath
 
+
+# Refresh path
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
 
 # Add Path to env
-If(Test-Path $toolsPandocPath)
+If(Test-Path $toolsPath)
 {
-  cd $toolsPandocPath
-  $inputPath = (Join-Path $toolsPandocPath (Get-ChildItem -Name) )
+  cd $toolsPath
+  $inputPath = (Join-Path $toolsPath (Get-ChildItem -Name) )
   $inputPath += "\" #This is needed!
-  Set-pandocOnEnv $inputPath
+  Set-OnEnv $inputPath
 
 } else {
 
@@ -58,8 +61,11 @@ If(Test-Path $toolsPandocPath)
 }
 
 
+# Refresh path
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+
 # Test correct installation
-Write-Host "To test installation, RESTART your PC, open PowerShell and call: pandoc --version"
+Start-Process -FilePath "sqlite3.exe" -ArgumentList "ex1" -Wait
 
 } # End Main
 
@@ -77,22 +83,22 @@ Function script:CreateIf-Folder{
     {
         # Only need one installation folder, for correct path definition
         Remove-Item $sPath -Recurse
-        Write-Host "Old folder was removed:" + $sPath
+        Write-Host "Old folder was removed: " $sPath
     } else {
         New-Item -Path $sPath -ItemType Directory
-        Write-Host "Folder Created at: " + $sPath
+        Write-Host "Folder Created at: " $sPath
     }
 }
 
-# Create Path <SystemDrive>:\tools\pandoc
-Function script:Get-ToolsPandoc{
+# Create Path <SystemDrive>:\tools\sqlite
+Function script:Get-ToolsSqlite{
     # Create Path on SystemDrive
-    Set-Variable -Name "ToolsPandocPath" -Value  (Join-Path $env:SystemDrive "\tools\pandoc")
-    $ToolsPandocPath
+    Set-Variable -Name "ToolsSqlitePath" -Value  (Join-Path $env:SystemDrive "\tools\sqlite")
+    $ToolsSqlitePath
 }
 
 # Set pandoc-installVersion on system path.
-Function script:Set-pandocOnEnv{
+Function script:Set-OnEnv{
    Param(
     [Parameter(Mandatory=$true)]
     [String]$sPath
