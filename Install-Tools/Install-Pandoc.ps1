@@ -44,6 +44,9 @@ CreateIf-Folder $toolsPandocPath
 Expand-Archive -LiteralPath $LocalTempZip -DestinationPath $toolsPandocPath
 
 
+# Refresh path
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
 # Add Path to env
 If(Test-Path $toolsPandocPath)
 {
@@ -58,8 +61,11 @@ If(Test-Path $toolsPandocPath)
 }
 
 
+# Refresh path
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
 # Test correct installation
-Write-Host "To test installation, RESTART your PC, open PowerShell and call: pandoc --version"
+pandoc --version
 
 } # End Main
 
