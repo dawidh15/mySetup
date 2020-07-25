@@ -7,23 +7,21 @@ why: Helpers to setup my-system configuration.
 
 ## Install-Pandoc PowerShell script
 
-This is a script that takes one parameter: `installVersion`. This is the desired version of Pandoc to install in your windows system.
+This is a script that takes one parameter: `installVersion`. This is the desired version of Pandoc to be installed in your windows system.
 
 The script creates a folder in `<SystemDrive>:\Users\<UserName>\AppData\Temp\PandocTmp`, where the zip file is stored. The next time this script is called, this folder will be deleted and replaced with the chosen version of pandoc.
 
 The Url (https://github.com/jgm/pandoc/releases/download/) is hardcoded. But can be easily changed within the script.
 
-After the zip file is downloaded the script then extracts the file into `<SystemDrive>:\tools\pandoc\pandoc-X.XX`. Afterwards, it introduces this folder in the *Machine* Path.
+After the zip file is downloaded the script then extracts the file into `<SystemDrive>:\tools\pandoc\pandoc-X.XX`. Afterwards, this folder's path is saved in the *Machine* Environment Variables.
 
 ### Usage
 
-If you want to install pandoc-2.10 for windows, you should write this line in the PowerShell:
+Example: You want to install pandoc-2.10 for windows. Then, you should write this line in the PowerShell:
 
 ```powerShell
 $<This_Repo_Local_Path>\Install-Tools\> .\Install-Pandoc.ps1 -installVersion 2.10
 ```
-
-You need to **restart** the terminal, to be able to use pandoc from PowerShell.
 
 ### Uninstall
 
@@ -54,9 +52,9 @@ For now, uninstall sqlite manually. Delete the folder `<SystemDrive>:\tools\sqli
 
 ## Test-SHA
 
-This scripts helps to verify if a file was downloaded correctly.
+This scripts helps to verify if a file was correctly downloaded.
 
-### Example check sqlite windows zip distribution
+### Example: Check zip file of sqlite for windows
 
 The zip package can be obtained from [here](https://www.sqlite.org/2020/sqlite-tools-win32-x86-3320300.zip). After downloading the file keep the path at hand.
 
