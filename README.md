@@ -47,6 +47,28 @@ If installation was correct, it will prompt you to the *sqlite CLI*. To exit, ex
 
 For now, uninstall sqlite manually. Delete the folder `<SystemDrive>:\tools\sqlite\`, clean the `Path`, and delete the Windows Registry where the pandoc key appears (*Careful, do not delete any key from the registry unless you are absolutely sure it is safe to do it*)
 
+## Install-Miktex
+
+This scripts does the following:
+
+1. Downloads the miktexSetUp.zip from an *URL* provided as an argument to the script (`$urlFile`).
+1. Executes `miktexSetUp.exe download`. This downloads the files according to an *installation type* that should be provided in the argument `$installationType`. Accepted values are: `basic, essential, complete`.
+1. Executes `miktexSetUp.exe install`. Installation type is replaced with `$installationType` value. This step sets the binaries in System Environment Variables. The installation is shared on all computer users.
+
+First runs using pandoc may failed. Some maintenance is done on the first pandoc trials. User should open *Miktex Console* and update packages as administrator. Scripts should be run as administrator. User may have to provided full path to pdf latex engine on pandocs args during first runs...
+
+Local repository and installation files will be on `<SystemDrive>\tools\miktexSetUp`.
+
+### Usage
+
+```powershell
+$url="https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-4.0-x64.zip"
+<Script Path> .\Install-Miktex -urlFile $url -installationType essential
+```
+
+### Uninstall
+
+There is a `Uninstall-Miktex.ps1` script that calls (TODO) `miktexSetUp.exe uninstall`.
 
 # Utils
 
