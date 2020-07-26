@@ -1,34 +1,33 @@
    Param(
     [Parameter(Mandatory=$true)]
-    [String]$precompBins
+    [String]$urlFile
     )
 
 Function Main
 {
 # Construct Path for download
-Set-Variable -Name "sqliteFolderName" -Value "sqliteTmp\"
-Set-Variable -Name "sqlitePath" -Value (Join-Path $env:TMP $sqliteFolderName)
-Write-Host "Path Name Created: " $sqlitePath
+Set-Variable -Name "tmpFolder" -Value "sqliteTmp\"
+Set-Variable -Name "tmpPath" -Value (Join-Path $env:TMP $tmpFolder)
+Write-Host "Path Name Created: " $tmpPath
 
 # Check if Temp Folder for Download exists
 # Yes: Delete folder and everything inside
-If (Test-Path $sqlitePath)
+If (Test-Path $tmpPath)
   {
-    Remove-Item $sqlitePath -Recurse
+    Remove-Item $tmpPath -Recurse
     Write-Host "Old Folder found and then deleted. New folder created."
   }
 
 # Create Folder
-New-Item -Path $sqlitePath -Type Directory
+New-Item -Path $tmpPath -Type Directory
 
 # Web request for sqlite.zip
     # Construct names, paths
-Set-Variable -Name "sqliteZip" -Value (Split-Path $precompBins -Leaf)
-Set-Variable -Name "SourceZip" -Value $precompBins
-Write-Host "Powershell generated Url: " $SourceZip
-Set-Variable -Name "LocalTempZip" -Value ($sqlitePath + $sqliteZip)
+Set-Variable -Name "sqliteZip" -Value (Split-Path $urlFile -Leaf)
+Write-Host "Powershell generated Url: " $urlFile
+Set-Variable -Name "LocalTempZip" -Value ($tmpPath + $sqliteZip)
 
-Invoke-WebRequest $SourceZip -OutFile $LocalTempZip
+Invoke-WebRequest $urlFile -OutFile $LocalTempZip
 
 If(Test-Path $LocalTempZip)
 {
@@ -45,7 +44,7 @@ Expand-Archive -LiteralPath $LocalTempZip -DestinationPath $toolsPath
 
 
 # Refresh path
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
 # Add Path to env
 If(Test-Path $toolsPath)
@@ -62,7 +61,7 @@ If(Test-Path $toolsPath)
 
 
 # Refresh path
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
 # Test correct installation
 Start-Process -FilePath "sqlite3.exe" -ArgumentList "ex1" -Wait
@@ -93,8 +92,8 @@ Function script:CreateIf-Folder{
 # Create Path <SystemDrive>:\tools\sqlite
 Function script:Get-ToolsSqlite{
     # Create Path on SystemDrive
-    Set-Variable -Name "ToolsSqlitePath" -Value  (Join-Path $env:SystemDrive "\tools\sqlite")
-    $ToolsSqlitePath
+    Set-Variable -Name "ToolstmpPath" -Value  (Join-Path $env:SystemDrive "\tools\sqlite")
+    $ToolstmpPath
 }
 
 # Set pandoc-installVersion on system path.
