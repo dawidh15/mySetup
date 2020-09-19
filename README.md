@@ -91,3 +91,16 @@ The script has three parameters:
 ```powershell
 .\Test-SHA.ps1 -webSha e737fe2726bf8cd239e90f1d01b275d5c78a1089 -filePath C:\dev\sqlite\sqlite-tools-win32-x86-3320300.zip -shaAlg SHA1
 ```
+
+## Generate-Password
+
+Use NET System.Web.Security.Membership method to generate a password.
+Special characters, upper and lower cast and non characters are guaranteed. Password length must be specified, and length must be 5 or greater.
+
+### Usage
+
+From the script path:
+
+```
+Generate-Password -PasswordLength 8
+```
