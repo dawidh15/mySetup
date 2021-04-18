@@ -150,7 +150,7 @@ Function script:Copy-SetUpToRepo{
 
 # Download repo
 Function script:Download-MiktexRepository{
-    $DownloadExpression="miktexsetup --verbose --local-package-repository="
+    $DownloadExpression="miktexsetup_standalone --verbose --local-package-repository="
     $DownloadExpression += (Join-Path $toolsPath $localRepoFolder)
     $DownloadExpression += (" --package-set=" + $installationType)
     $DownloadExpression += " --shared download"
@@ -160,7 +160,7 @@ Function script:Download-MiktexRepository{
 
 # Install Miktex Repository
 Function script:Install-MiktexRepository{
-$InstallExpression="miktexsetup --verbose --local-package-repository="
+$InstallExpression="miktexsetup_standalone --verbose --local-package-repository="
 $InstallExpression += (Join-Path $toolsPath $localRepoFolder)
 $InstallExpression += " --common-config="
 $InstallExpression += (Join-Path $toolsPath $localConfigFolder)
